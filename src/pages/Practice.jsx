@@ -4,6 +4,7 @@ import problems from '../json/problems.json';
 
 const allCategories = ['All', ...new Set(problems.map((problem) => problem.category))];
 const allDifficulties = ['All', ...new Set(problems.map((problem) => problem.difficulty))];
+const allBugTitles = [...new Set(problems.map((problem) => problem.title))].sort((a, b) => a.localeCompare(b));
 
 function parseTimeLimitToSeconds(timeLimit) {
   if (!timeLimit || typeof timeLimit !== 'string') {
@@ -25,7 +26,8 @@ export default function Practice() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedDifficulty, setSelectedDifficulty] = useState('All');
   const [problemIndex, setProblemIndex] = useState(null);
-  const [bugGuess, setBugGuess] = useState('');
+  const [bugGuessInput, setBugGuessInput] = useState('');
+  const [selectedBugGuess, setSelectedBugGuess] = useState('');
   const [fixAttempt, setFixAttempt] = useState('');
   const [secondsLeft, setSecondsLeft] = useState(0);
   const [hasStarted, setHasStarted] = useState(false);
@@ -62,7 +64,8 @@ export default function Practice() {
       return;
     }
 
-    setBugGuess('');
+    setBugGuessInput('');
+    setSelectedBugGuess('');
     setFixAttempt(activeProblem.code);
     setHasExpired(false);
     setShowBugReveal(false);
@@ -125,7 +128,8 @@ export default function Practice() {
     setShowBugReveal(false);
     setShowExplanation(false);
     setSecondsLeft(0);
-    setBugGuess('');
+    setBugGuessInput('');
+    setSelectedBugGuess('');
     setFixAttempt('');
   };
 
@@ -136,6 +140,16 @@ export default function Practice() {
   const toggleExplanation = () => {
     setShowExplanation((current) => !current);
   };
+
+  const filteredBugTitles = useMemo(() => {
+    const query = bugGuessInput.trim().toLowerCase();
+
+    if (!query) {
+      return allBugTitles;
+    }
+
+    return allBugTitles.filter((title) => title.toLowerCase().includes(query));
+  }, [bugGuessInput]);
 
   const timerPercentage = activeProblem
     ? (secondsLeft / parseTimeLimitToSeconds(activeProblem.timeLimit)) * 100
@@ -286,17 +300,53 @@ export default function Practice() {
                 <label className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                   What do you think the bug is?
                 </label>
-                <textarea
-                  value={bugGuess}
-                  onChange={(event) => setBugGuess(event.target.value)}
-                  placeholder="Write your diagnosis here..."
-                  className="mt-3 min-h-[180px] w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm leading-6 text-slate-800 outline-none transition focus:border-sky-500"
+                <input
+                  type="text"
+                  value={bugGuessInput}
+                  onChange={(event) => {
+                    setBugGuessInput(event.target.value);
+                    setSelectedBugGuess('');
+                  }}
+                  placeholder="Type to narrow bug options..."
+                  className="mt-3 w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm leading-6 text-slate-800 outline-none transition focus:border-sky-500"
                 />
+
+                <div className="mt-3 max-h-[220px] overflow-y-auto rounded-2xl border border-slate-200 bg-slate-50 p-2">
+                  {filteredBugTitles.length > 0 ? (
+                    <div className="space-y-2">
+                      {filteredBugTitles.map((title) => {
+                        const isSelected = selectedBugGuess === title;
+
+                        return (
+                          <button
+                            key={title}
+                            type="button"
+                            onClick={() => {
+                              setSelectedBugGuess(title);
+                              setBugGuessInput(title);
+                            }}
+                            className={`w-full rounded-xl px-3 py-3 text-left text-sm transition ${
+                              isSelected
+                                ? 'bg-slate-950 text-white'
+                                : 'bg-white text-slate-700 hover:bg-slate-100'
+                            }`}
+                          >
+                            {title}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="rounded-xl bg-white px-3 py-3 text-sm text-slate-500">
+                      No matching bug options.
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="rounded-2xl border border-slate-200 bg-white p-5">
                 <label className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                  Bonus: draft your fix
+                  Bonus: draft your fix and reasoning
                 </label>
                 <textarea
                   value={fixAttempt}

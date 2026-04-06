@@ -328,5 +328,395 @@
     "symptom": "Hanging request",
     "code": "HttpURLConnection conn = (HttpURLConnection) url.openConnection();",
     "explanation": "Timeouts must be configured to avoid hanging."
+  },
+  {
+    "id": "array-two-sum-1",
+    "title": "Two Sum brute force misses final pair",
+    "difficulty": "Easy",
+    "category": "Arrays",
+    "timeLimit": "03:00",
+    "symptom": "Valid pair at the end is never found.",
+    "code": "for (int i = 0; i < nums.length; i++) {\n    for (int j = i + 1; j < nums.length - 1; j++) {\n        if (nums[i] + nums[j] == target) return new int[] { i, j };\n    }\n}",
+    "explanation": "The inner loop stops too early because it uses nums.length - 1. That skips the final possible pair."
+  },
+  {
+    "id": "array-merge-1",
+    "title": "Merge arrays overwrites unread values",
+    "difficulty": "Medium",
+    "category": "Arrays",
+    "timeLimit": "04:00",
+    "symptom": "Merged output is corrupted.",
+    "code": "for (int i = 0; i < n; i++) {\n    nums1[m + i] = nums2[i];\n}\nArrays.sort(nums1);",
+    "explanation": "This only works if nums1 has enough trailing space and the logic respects the original m boundary. Interview merge problems usually require careful in-place handling from the back."
+  },
+  {
+    "id": "array-prefix-sum-1",
+    "title": "Prefix sum starts with wrong seed",
+    "difficulty": "Medium",
+    "category": "Arrays",
+    "timeLimit": "04:00",
+    "symptom": "Range sums are off by one element.",
+    "code": "prefix[0] = nums[0];\nfor (int i = 1; i < nums.length; i++) {\n    prefix[i] = prefix[i - 1] + nums[i];\n}",
+    "explanation": "This can be valid for some uses, but many interview prefix sum patterns expect a leading zero slot so range queries are simpler and less error-prone."
+  },
+  {
+    "id": "string-anagram-1",
+    "title": "Anagram check ignores length mismatch",
+    "difficulty": "Easy",
+    "category": "Strings",
+    "timeLimit": "03:00",
+    "symptom": "Different-length strings sometimes pass deeper logic unnecessarily.",
+    "code": "char[] a = s.toCharArray();\nchar[] b = t.toCharArray();\nArrays.sort(a);\nArrays.sort(b);\nreturn Arrays.equals(a, b);",
+    "explanation": "Sorting works, but a fast anagram check should reject different lengths immediately. Missing the early check wastes time and is a common interview oversight."
+  },
+  {
+    "id": "string-substring-1",
+    "title": "Substring end index misunderstood",
+    "difficulty": "Easy",
+    "category": "Strings",
+    "timeLimit": "03:00",
+    "symptom": "Extracted text is shorter than expected.",
+    "code": "String part = text.substring(0, 3);",
+    "explanation": "Java substring end index is exclusive. Misunderstanding that boundary is a classic string bug."
+  },
+  {
+    "id": "string-builder-1",
+    "title": "String concatenation in loop is too expensive",
+    "difficulty": "Medium",
+    "category": "Strings",
+    "timeLimit": "04:00",
+    "symptom": "Solution times out on large input.",
+    "code": "String result = \"\";\nfor (String word : words) {\n    result += word;\n}",
+    "explanation": "Repeated string concatenation in a loop creates many temporary objects. Interviewers often expect StringBuilder for this pattern."
+  },
+  {
+    "id": "linked-list-remove-1",
+    "title": "Remove nth node forgets dummy head",
+    "difficulty": "Medium",
+    "category": "Linked Lists",
+    "timeLimit": "05:00",
+    "symptom": "Removing the head node fails.",
+    "code": "ListNode fast = head;\nListNode slow = head;\nfor (int i = 0; i < n; i++) fast = fast.next;\nwhile (fast.next != null) {\n    fast = fast.next;\n    slow = slow.next;\n}\nslow.next = slow.next.next;",
+    "explanation": "Without a dummy head, edge cases like removing the first node are awkward and often break. This is a common linked list interview bug."
+  },
+  {
+    "id": "linked-list-reverse-1",
+    "title": "Reverse list loses remaining nodes",
+    "difficulty": "Easy",
+    "category": "Linked Lists",
+    "timeLimit": "04:00",
+    "symptom": "List is truncated during reversal.",
+    "code": "while (current != null) {\n    current.next = prev;\n    prev = current;\n    current = current.next;\n}",
+    "explanation": "The next pointer is overwritten before storing the original next node. Once that happens, the rest of the list can be lost."
+  },
+  {
+    "id": "linked-list-merge-1",
+    "title": "Merged list never advances tail",
+    "difficulty": "Medium",
+    "category": "Linked Lists",
+    "timeLimit": "05:00",
+    "symptom": "Output list contains repeated or missing nodes.",
+    "code": "tail.next = l1;\nl1 = l1.next;",
+    "explanation": "In merge-list patterns, forgetting to move tail after attaching a node corrupts the merged chain."
+  },
+  {
+    "id": "tree-depth-1",
+    "title": "Max depth uses min instead of max",
+    "difficulty": "Easy",
+    "category": "Trees",
+    "timeLimit": "03:00",
+    "symptom": "Depth is too small on unbalanced trees.",
+    "code": "return 1 + Math.min(depth(node.left), depth(node.right));",
+    "explanation": "Maximum depth must use the deeper subtree, not the shallower one."
+  },
+  {
+    "id": "tree-level-order-1",
+    "title": "Level order mixes nodes across levels",
+    "difficulty": "Medium",
+    "category": "Trees",
+    "timeLimit": "05:00",
+    "symptom": "All nodes appear in one level bucket.",
+    "code": "while (!queue.isEmpty()) {\n    List<Integer> level = new ArrayList<>();\n    while (!queue.isEmpty()) {\n        TreeNode node = queue.poll();\n        level.add(node.val);\n        if (node.left != null) queue.offer(node.left);\n        if (node.right != null) queue.offer(node.right);\n    }\n    result.add(level);\n}",
+    "explanation": "Using queue.isEmpty() for the inner loop consumes the entire queue, so level boundaries are lost. Level order traversal needs the current level size snapshot."
+  },
+  {
+    "id": "tree-path-sum-1",
+    "title": "Path sum mutates target incorrectly",
+    "difficulty": "Medium",
+    "category": "Trees",
+    "timeLimit": "05:00",
+    "symptom": "Valid root-to-leaf sums are missed.",
+    "code": "target -= node.val;\nreturn hasPath(node.left, target) || hasPath(node.right, target);",
+    "explanation": "Mutating a shared target variable can be fine locally, but interview solutions often break when the value is reused carelessly across branches. Passing a derived value explicitly is safer."
+  },
+  {
+    "id": "graph-topo-1",
+    "title": "Topological sort ignores indegree updates",
+    "difficulty": "Hard",
+    "category": "Graphs",
+    "timeLimit": "06:00",
+    "symptom": "Valid ordering is incomplete.",
+    "code": "for (int next : graph.get(node)) {\n    if (indegree[next] == 0) {\n        queue.offer(next);\n    }\n}",
+    "explanation": "Neighbors must have their indegree decremented before checking whether they are ready. Forgetting that step breaks Kahn's algorithm."
+  },
+  {
+    "id": "graph-union-find-1",
+    "title": "Union-find find method skips compression assignment",
+    "difficulty": "Hard",
+    "category": "Graphs",
+    "timeLimit": "06:00",
+    "symptom": "Solution is much slower than expected.",
+    "code": "if (parent[x] != x) {\n    find(parent[x]);\n}\nreturn parent[x];",
+    "explanation": "The recursive result is not assigned back to parent[x], so path compression never actually happens."
+  },
+  {
+    "id": "graph-dijkstra-1",
+    "title": "Dijkstra uses FIFO queue",
+    "difficulty": "Hard",
+    "category": "Graphs",
+    "timeLimit": "06:00",
+    "symptom": "Shortest path answers are wrong on weighted graphs.",
+    "code": "Queue<int[]> queue = new LinkedList<>();",
+    "explanation": "Dijkstra requires a priority queue ordered by current distance. A normal FIFO queue breaks the algorithm on weighted graphs."
+  },
+  {
+    "id": "stack-min-1",
+    "title": "Min stack loses previous minimum",
+    "difficulty": "Medium",
+    "category": "Stacks and Queues",
+    "timeLimit": "05:00",
+    "symptom": "getMin becomes wrong after popping.",
+    "code": "if (x <= min) min = x;\nstack.push(x);",
+    "explanation": "Tracking only a single min value is not enough when elements are popped. Interview min-stack problems need historical minimum tracking too."
+  },
+  {
+    "id": "queue-stack-1",
+    "title": "Queue with stacks returns wrong front",
+    "difficulty": "Medium",
+    "category": "Stacks and Queues",
+    "timeLimit": "05:00",
+    "symptom": "Peek does not match expected queue order.",
+    "code": "return inStack.peek();",
+    "explanation": "In a queue-built-from-stacks problem, peek logic must respect transfer order. Reading directly from the input stack usually returns the newest item, not the oldest."
+  },
+  {
+    "id": "heap-kth-1",
+    "title": "Kth largest heap keeps wrong size",
+    "difficulty": "Medium",
+    "category": "Heaps",
+    "timeLimit": "05:00",
+    "symptom": "Returned kth largest value is incorrect.",
+    "code": "heap.offer(num);\nif (heap.size() >= k) {\n    heap.poll();\n}",
+    "explanation": "Polling when size is equal to k removes one element too early. The heap should usually only shrink when its size exceeds k."
+  },
+  {
+    "id": "heap-merge-1",
+    "title": "Merge k lists heap omits next node",
+    "difficulty": "Hard",
+    "category": "Heaps",
+    "timeLimit": "06:00",
+    "symptom": "Merged output stops too early.",
+    "code": "ListNode node = heap.poll();\ntail.next = node;\ntail = tail.next;",
+    "explanation": "In merge-k-lists patterns, after polling a node you must push its next node into the heap. Forgetting that loses the remainder of that list."
+  },
+  {
+    "id": "greedy-jump-1",
+    "title": "Jump game updates reach too late",
+    "difficulty": "Medium",
+    "category": "Greedy",
+    "timeLimit": "04:00",
+    "symptom": "Reachable array is reported unreachable.",
+    "code": "if (i > reach) return false;\nreach = nums[i] + 1;",
+    "explanation": "The greedy reach update is wrong because it ignores the current index and previous best reach. Jump game solutions must preserve the maximum reachable position."
+  },
+  {
+    "id": "greedy-gas-1",
+    "title": "Gas station running tank resets incorrectly",
+    "difficulty": "Hard",
+    "category": "Greedy",
+    "timeLimit": "06:00",
+    "symptom": "Wrong starting station is returned.",
+    "code": "tank += gas[i] - cost[i];\nif (tank < 0) {\n    start = i;\n    tank = 0;\n}",
+    "explanation": "When the tank goes negative, the next candidate start should be i + 1, not i. Off-by-one resets are common in this greedy problem."
+  },
+  {
+    "id": "dp-knapsack-1",
+    "title": "0/1 knapsack reuses same item multiple times",
+    "difficulty": "Hard",
+    "category": "Dynamic Programming",
+    "timeLimit": "06:00",
+    "symptom": "Score is too high compared with valid choices.",
+    "code": "for (int w = weights[i]; w <= capacity; w++) {\n    dp[w] = Math.max(dp[w], dp[w - weights[i]] + values[i]);\n}",
+    "explanation": "For 0/1 knapsack, iterating forward can reuse the same item within the same round. The capacity loop should usually run backward."
+  },
+  {
+    "id": "dp-palindrome-1",
+    "title": "Palindrome DP reads uncomputed state",
+    "difficulty": "Hard",
+    "category": "Dynamic Programming",
+    "timeLimit": "06:00",
+    "symptom": "Longest palindrome is too short.",
+    "code": "for (int i = 0; i < n; i++) {\n    for (int j = i + 1; j < n; j++) {\n        dp[i][j] = s.charAt(i) == s.charAt(j) && dp[i + 1][j - 1];\n    }\n}",
+    "explanation": "This fill order can read dp[i + 1][j - 1] before it has been computed. Many palindrome DP solutions require iterating i backward."
+  },
+  {
+    "id": "backtracking-subsets-1",
+    "title": "Subsets result stores same list reference",
+    "difficulty": "Medium",
+    "category": "Backtracking",
+    "timeLimit": "05:00",
+    "symptom": "All stored subsets end up identical.",
+    "code": "results.add(current);",
+    "explanation": "Backtracking state is mutable. Adding the same list reference means later changes affect every stored result. A copy is needed."
+  },
+  {
+    "id": "backtracking-permute-1",
+    "title": "Permutation backtracking never unmarks used value",
+    "difficulty": "Medium",
+    "category": "Backtracking",
+    "timeLimit": "05:00",
+    "symptom": "Many permutations are missing.",
+    "code": "used[i] = true;\ncurrent.add(nums[i]);\nbacktrack();\ncurrent.remove(current.size() - 1);",
+    "explanation": "The current element is removed, but used[i] is never reset to false. That blocks the value from future branches."
+  },
+  {
+    "id": "math-prime-1",
+    "title": "Prime checker loops too far and too slowly",
+    "difficulty": "Easy",
+    "category": "Math",
+    "timeLimit": "03:00",
+    "symptom": "Prime check is slower than expected.",
+    "code": "for (int i = 2; i < n; i++) {\n    if (n % i == 0) return false;\n}",
+    "explanation": "This works for many values but is inefficient. Interview prime checks usually only iterate up to sqrt(n)."
+  },
+  {
+    "id": "math-power-1",
+    "title": "Fast power halves exponent incorrectly",
+    "difficulty": "Medium",
+    "category": "Math",
+    "timeLimit": "05:00",
+    "symptom": "Power result is wrong for odd exponents.",
+    "code": "double half = pow(x, n / 2);\nreturn half * half;",
+    "explanation": "Exponentiation by squaring must handle odd exponents explicitly. Returning only half * half drops one factor of x for odd n."
+  },
+  {
+    "id": "sorting-merge-1",
+    "title": "Merge sort merge never copies right remainder",
+    "difficulty": "Hard",
+    "category": "Sorting",
+    "timeLimit": "06:00",
+    "symptom": "Sorted output is missing tail elements.",
+    "code": "while (i < left.length && j < right.length) {\n    if (left[i] < right[j]) merged[k++] = left[i++];\n    else merged[k++] = right[j++];\n}",
+    "explanation": "After the main merge loop, any remaining elements on either side must still be copied. Forgetting the remainder is a common merge-sort bug."
+  },
+  {
+    "id": "sorting-quick-1",
+    "title": "Quick sort partition forgets pivot placement",
+    "difficulty": "Hard",
+    "category": "Sorting",
+    "timeLimit": "06:00",
+    "symptom": "Output is only partially sorted.",
+    "code": "int pivot = nums[right];\nint i = left;\nfor (int j = left; j < right; j++) {\n    if (nums[j] < pivot) {\n        swap(nums, i, j);\n        i++;\n    }\n}\nreturn i;",
+    "explanation": "The pivot must usually be swapped into its final position before returning the partition index. Otherwise the partition is incomplete."
+  },
+  {
+    "id": "oop-constructor-1",
+    "title": "Subclass constructor forgets super requirements",
+    "difficulty": "Medium",
+    "category": "OOP",
+    "timeLimit": "04:00",
+    "symptom": "Code does not compile after subclass creation.",
+    "code": "class Animal { Animal(String name) {} }\nclass Dog extends Animal { Dog() {} }",
+    "explanation": "If the parent has no no-arg constructor, the subclass must explicitly call super with the required arguments."
+  },
+  {
+    "id": "oop-polymorphism-1",
+    "title": "Static method assumed to override",
+    "difficulty": "Medium",
+    "category": "OOP",
+    "timeLimit": "04:00",
+    "symptom": "Unexpected method implementation runs.",
+    "code": "class A { static void hello() {} }\nclass B extends A { static void hello() {} }",
+    "explanation": "Static methods are hidden, not overridden. Calls are resolved by reference type, not runtime subtype."
+  },
+  {
+    "id": "sql-join-1",
+    "title": "Inner join drops unmatched rows unexpectedly",
+    "difficulty": "Medium",
+    "category": "SQL",
+    "timeLimit": "04:00",
+    "symptom": "Rows with no related record disappear.",
+    "code": "SELECT u.id, o.id FROM users u JOIN orders o ON u.id = o.user_id;",
+    "explanation": "An inner join only returns matched rows. If unmatched users must remain, the query likely needs a LEFT JOIN instead."
+  },
+  {
+    "id": "sql-groupby-1",
+    "title": "Aggregate query selects non-grouped column",
+    "difficulty": "Medium",
+    "category": "SQL",
+    "timeLimit": "04:00",
+    "symptom": "SQL error or nondeterministic results.",
+    "code": "SELECT department, employee_name, COUNT(*) FROM employees GROUP BY department;",
+    "explanation": "Selecting employee_name without grouping or aggregating it violates standard SQL grouping rules."
+  },
+  {
+    "id": "spring-bean-1",
+    "title": "Bean not discovered by component scan",
+    "difficulty": "Medium",
+    "category": "Spring",
+    "timeLimit": "04:00",
+    "symptom": "No qualifying bean found.",
+    "code": "package com.example.feature;\npublic class BillingService {}",
+    "explanation": "If the class is not annotated as a bean or lives outside component scanning, Spring will not discover it for injection."
+  },
+  {
+    "id": "spring-requestbody-1",
+    "title": "Controller parameter missing request body annotation",
+    "difficulty": "Easy",
+    "category": "Spring",
+    "timeLimit": "03:00",
+    "symptom": "Posted JSON does not bind to object.",
+    "code": "@PostMapping(\"/users\")\npublic User create(User user) {\n    return service.save(user);\n}",
+    "explanation": "Without @RequestBody, Spring may not bind JSON request content into the method parameter as intended."
+  },
+  {
+    "id": "security-auth-1",
+    "title": "Authorization check uses user input directly",
+    "difficulty": "Hard",
+    "category": "Security",
+    "timeLimit": "05:00",
+    "symptom": "User can request another user's data.",
+    "code": "if (requestUserId.equals(pathUserId)) {\n    return accountService.load(pathUserId);\n}",
+    "explanation": "Authorization should be based on trusted authenticated identity, not just a user-controlled request value."
+  },
+  {
+    "id": "security-password-1",
+    "title": "Password stored in plain text",
+    "difficulty": "Easy",
+    "category": "Security",
+    "timeLimit": "03:00",
+    "symptom": "Credential storage is unsafe.",
+    "code": "user.setPassword(rawPassword);",
+    "explanation": "Passwords should be hashed with a strong one-way password hashing function before storage."
+  },
+  {
+    "id": "networking-retry-1",
+    "title": "Retry loop retries forever",
+    "difficulty": "Medium",
+    "category": "Networking",
+    "timeLimit": "04:00",
+    "symptom": "Service hangs during repeated failures.",
+    "code": "while (true) {\n    try {\n        return client.call();\n    } catch (Exception e) {\n    }\n}",
+    "explanation": "The loop has no retry limit, no backoff, and no fail-fast path, so repeated errors can trap the system forever."
+  },
+  {
+    "id": "networking-status-1",
+    "title": "HTTP success assumed without checking status code",
+    "difficulty": "Easy",
+    "category": "Networking",
+    "timeLimit": "03:00",
+    "symptom": "Error responses are treated like success.",
+    "code": "InputStream in = conn.getInputStream();",
+    "explanation": "HTTP clients should inspect the response status first. Reading only the input stream path can mis-handle non-2xx responses."
   }
 ]
