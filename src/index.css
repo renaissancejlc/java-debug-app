@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap'); /* Clean modern sans-serif */
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=General+Sans:wght@200;300;400;500;600&family=Italiana&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Manrope', 'DM Sans', 'General Sans', sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: 'Bebas Neue', 'Fraunces', serif;
+  letter-spacing: 0.05em;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* html, body {
+  cursor: none;
+}
+
+.cursor-circle {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 32px;
+  background: radial-gradient(circle at center, #fffacd, #fce047, #fbb040);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate3d(-50%, -50%, 0);
+  z-index: 9999;
+  mix-blend-mode: screen;
+  transition: transform 0.05s ease-out;
+  box-shadow:
+    0 0 10px 4px rgba(255, 240, 100, 0.6),
+    0 0 20px 8px rgba(255, 220, 50, 0.4),
+    0 0 30px 12px rgba(255, 200, 0, 0.2);
+  backdrop-filter: blur(2px);
+} */
+
+/* Site title font override */
+.site-title {
+  font-family: 'Italiana', serif !important;
+}
+
+/* Optional soft grain overlay */
+.grain-overlay {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  background-image: url('/images/grain.png');
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+}
+
+/* Floating animation for dreamy motion */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+@keyframes bar1 {
+  0%, 100% { height: 40%; }
+  50% { height: 80%; }
+}
+@keyframes bar2 {
+  0%, 100% { height: 30%; }
+  50% { height: 70%; }
+}
+@keyframes bar3 {
+  0%, 100% { height: 50%; }
+  50% { height: 75%; }
+}
+
+.animate-bar1 {
+  animation: bar1 1.8s infinite ease-in-out;
+}
+.animate-bar2 {
+  animation: bar2 1.8s infinite ease-in-out;
+}
+.animate-bar3 {
+  animation: bar3 1.8s infinite ease-in-out;
+}
+
+.float-slow {
+  animation: float 10s ease-in-out infinite;
+}

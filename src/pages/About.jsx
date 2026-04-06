@@ -1,0 +1,55 @@
+import React from 'react';
+import Navbar from '../components/NavBar';
+import Footer from '../components/Footer';
+
+import '../index.css';
+
+
+export default function About() {
+  return (
+    <>
+      <Navbar />
+      <div className="border-t-4 border-black"></div>
+      <div className="px-8 py-16 space-y-24 text-black">
+        {/* Hero Section */}
+        <section className="grid md:grid-cols-2 gap-12 items-center">
+          <img src='./images/keep8.JPG' alt="Doug Cooper" className="rounded-xl shadow-xl w-full max-w-sm mx-auto" />
+          <div>
+            <h1 className="text-5xl font-bold mb-4 font-fraunces site-title transition-all duration-100 group hover:italic">
+              <span className="group-hover:opacity-100 opacity-0 transition-opacity duration-100">- </span>
+              Meet Doug Cooper
+              <span className="group-hover:opacity-100 opacity-0 transition-opacity duration-100"> -</span>
+            </h1>
+            <p className="text-lg leading-relaxed">
+              Author. Speaker. Storyteller. Doug believes in the power of words to spark transformation.
+            </p>
+          </div>
+        </section>
+
+        {/* His Story */}
+        <section className="grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <h2 className="text-3xl font-semibold mb-4 font-fraunces">His Story</h2>
+            <p className="text-lg leading-relaxed">
+              Doug's journey as a writer began with a single question: What does the world need most right now?
+              Through his books, speaking, and community work, Doug has inspired countless people to live with purpose and
+              conviction. His latest series is a call to become the light you seek.
+            </p>
+          </div>
+          <img src='./images/keep5.JPG' alt="Doug speaking" className="rounded-xl shadow-xl w-full max-w-sm mx-auto" />
+        </section>
+
+        {/* Photo Grid */}
+        <section>
+          <h2 className="text-3xl font-semibold mb-6 text-center font-fraunces">Snapshots</h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <img src='./images/keep200.JPG' alt="Doug family pic" className="rounded-lg shadow-md w-full" />
+            <img src='./images/keep22.JPG' alt="Doug at event" className="rounded-lg shadow-md w-full" />
+            <img src='./images/keep50.JPG' alt="Doug personal pic" className="rounded-lg shadow-md w-full" />
+          </div>
+        </section>
+      </div>
+      <Footer />
+    </>
+  );
+}

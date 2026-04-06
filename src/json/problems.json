@@ -1,0 +1,605 @@
+[
+  {
+    "id": "spring-autowired-1",
+    "title": "Spring dependency not injected",
+    "difficulty": "Easy",
+    "category": "Spring",
+    "timeLimit": "02:00",
+    "symptom": "NullPointerException when calling service method.",
+    "code": "@Service\npublic class UserService {\n\n    private UserRepository repo;\n\n    public List<User> getUsers() {\n        return repo.findAll();\n    }\n}"
+  },
+  {
+    "id": "spring-controller-1",
+    "title": "Controller returns view instead of JSON",
+    "difficulty": "Easy",
+    "category": "Spring",
+    "timeLimit": "03:00",
+    "symptom": "Endpoint returns a view name instead of JSON data.",
+    "code": "@Controller\npublic class UserController {\n\n    @GetMapping(\"/users\")\n    public List<User> getUsers() {\n        return List.of(new User(1L, \"Reny\"));\n    }\n}"
+  },
+  {
+    "id": "spring-transaction-1",
+    "title": "Private transactional method ignored",
+    "difficulty": "Medium",
+    "category": "Spring",
+    "timeLimit": "04:00",
+    "symptom": "Database changes are not rolled back even though @Transactional is present.",
+    "code": "@Service\npublic class PaymentService {\n\n    public void checkout() {\n        saveOrder();\n    }\n\n    @Transactional\n    private void saveOrder() {\n        // save order and charge card\n    }\n}"
+  },
+  {
+    "id": "string-equality-1",
+    "title": "String comparison bug",
+    "difficulty": "Easy",
+    "category": "Strings",
+    "timeLimit": "02:00",
+    "symptom": "Expected true for new String(\"ADMIN\"), got false.",
+    "code": "public static boolean isAdmin(String role) {\n    return role == \"ADMIN\";\n}"
+  },
+  {
+    "id": "string-trim-1",
+    "title": "Trim result ignored",
+    "difficulty": "Easy",
+    "category": "Strings",
+    "timeLimit": "02:00",
+    "symptom": "Username still contains leading spaces after cleanup.",
+    "code": "public static String normalize(String username) {\n    username.trim();\n    return username;\n}"
+  },
+  {
+    "id": "string-null-1",
+    "title": "Unsafe equals call",
+    "difficulty": "Easy",
+    "category": "Strings",
+    "timeLimit": "02:00",
+    "symptom": "NullPointerException when status is null.",
+    "code": "public static boolean isReady(String status) {\n    return status.equals(\"READY\");\n}"
+  },
+  {
+    "id": "loop-boundary-1",
+    "title": "Off-by-one loop error",
+    "difficulty": "Easy",
+    "category": "Loops",
+    "timeLimit": "02:00",
+    "symptom": "Last element of array is never processed.",
+    "code": "for (int i = 0; i < nums.length - 1; i++) {\n    total += nums[i];\n}"
+  },
+  {
+    "id": "loop-reverse-1",
+    "title": "Reverse loop skips index zero",
+    "difficulty": "Easy",
+    "category": "Loops",
+    "timeLimit": "02:00",
+    "symptom": "First character is missing from the reversed output.",
+    "code": "for (int i = text.length() - 1; i > 0; i--) {\n    builder.append(text.charAt(i));\n}"
+  },
+  {
+    "id": "loop-infinite-1",
+    "title": "Loop variable never changes",
+    "difficulty": "Medium",
+    "category": "Loops",
+    "timeLimit": "03:00",
+    "symptom": "Method never finishes for positive input.",
+    "code": "while (count > 0) {\n    total += count;\n}"
+  },
+  {
+    "id": "collections-1",
+    "title": "Concurrent modification exception",
+    "difficulty": "Medium",
+    "category": "Collections",
+    "timeLimit": "04:00",
+    "symptom": "Throws ConcurrentModificationException when removing items.",
+    "code": "for (String name : names) {\n    if (name.isBlank()) {\n        names.remove(name);\n    }\n}"
+  },
+  {
+    "id": "collections-index-1",
+    "title": "List set used before add",
+    "difficulty": "Easy",
+    "category": "Collections",
+    "timeLimit": "02:00",
+    "symptom": "IndexOutOfBoundsException on an empty list.",
+    "code": "List<String> names = new ArrayList<>();\nnames.set(0, \"Reny\");"
+  },
+  {
+    "id": "collections-map-1",
+    "title": "Map count reset each time",
+    "difficulty": "Medium",
+    "category": "Collections",
+    "timeLimit": "03:00",
+    "symptom": "Word counts never go above 1.",
+    "code": "for (String word : words) {\n    counts.put(word, 1);\n}"
+  },
+  {
+    "id": "null-check-1",
+    "title": "Missing null check",
+    "difficulty": "Easy",
+    "category": "Null Handling",
+    "timeLimit": "02:00",
+    "symptom": "NullPointerException when input is null.",
+    "code": "public static int getLength(String input) {\n    return input.length();\n}"
+  },
+  {
+    "id": "null-nested-1",
+    "title": "Nested property access without guard",
+    "difficulty": "Easy",
+    "category": "Null Handling",
+    "timeLimit": "03:00",
+    "symptom": "NullPointerException when user or address is missing.",
+    "code": "public static String getZip(User user) {\n    return user.getAddress().getZipCode();\n}"
+  },
+  {
+    "id": "null-wrapper-1",
+    "title": "Auto-unboxing null Integer",
+    "difficulty": "Medium",
+    "category": "Null Handling",
+    "timeLimit": "03:00",
+    "symptom": "NullPointerException when score is not set.",
+    "code": "Integer score = null;\nint finalScore = score;"
+  },
+  {
+    "id": "streams-1",
+    "title": "Stream not executed",
+    "difficulty": "Medium",
+    "category": "Streams",
+    "timeLimit": "04:00",
+    "symptom": "Nothing happens even though filter is defined.",
+    "code": "list.stream()\n    .filter(x -> x > 10);"
+  },
+  {
+    "id": "streams-map-1",
+    "title": "Map creates stream of lengths but never collects",
+    "difficulty": "Medium",
+    "category": "Streams",
+    "timeLimit": "04:00",
+    "symptom": "Method returns the original list instead of name lengths.",
+    "code": "public static List<String> lengths(List<String> names) {\n    names.stream().map(String::length);\n    return names;\n}"
+  },
+  {
+    "id": "streams-filter-1",
+    "title": "Wrong filter condition",
+    "difficulty": "Easy",
+    "category": "Streams",
+    "timeLimit": "03:00",
+    "symptom": "Adults are filtered out and minors remain.",
+    "code": "return people.stream()\n    .filter(person -> person.getAge() < 18)\n    .toList();"
+  },
+  {
+    "id": "concurrency-1",
+    "title": "Race condition increment",
+    "difficulty": "Hard",
+    "category": "Concurrency",
+    "timeLimit": "06:00",
+    "symptom": "Final count is inconsistent when using multiple threads.",
+    "code": "public class Counter {\n    private int count = 0;\n\n    public void increment() {\n        count++;\n    }\n\n    public int getCount() {\n        return count;\n    }\n}"
+  },
+  {
+    "id": "concurrency-visibility-1",
+    "title": "Stop flag never seen",
+    "difficulty": "Hard",
+    "category": "Concurrency",
+    "timeLimit": "06:00",
+    "symptom": "Worker thread sometimes never stops.",
+    "code": "public class Worker {\n    private boolean running = true;\n\n    public void stop() {\n        running = false;\n    }\n\n    public void run() {\n        while (running) {\n            // work\n        }\n    }\n}"
+  },
+  {
+    "id": "concurrency-threadsafe-1",
+    "title": "Shared ArrayList accessed by many threads",
+    "difficulty": "Hard",
+    "category": "Concurrency",
+    "timeLimit": "06:00",
+    "symptom": "Random failures and inconsistent list size under load.",
+    "code": "public class TaskStore {\n    private final List<String> tasks = new ArrayList<>();\n\n    public void add(String task) {\n        tasks.add(task);\n    }\n}"
+  },
+  {
+    "id": "exceptions-swallow-1",
+    "title": "Exception swallowed silently",
+    "difficulty": "Easy",
+    "category": "Exceptions",
+    "timeLimit": "02:00",
+    "symptom": "Failures disappear and debugging is impossible.",
+    "code": "try {\n    processPayment();\n} catch (Exception e) {\n}\n"
+  },
+  {
+    "id": "exceptions-order-1",
+    "title": "Catch blocks in wrong order",
+    "difficulty": "Medium",
+    "category": "Exceptions",
+    "timeLimit": "03:00",
+    "symptom": "Code does not compile because specific catch is unreachable.",
+    "code": "try {\n    readFile();\n} catch (Exception e) {\n    log.error(\"general\", e);\n} catch (IOException e) {\n    log.error(\"io\", e);\n}"
+  },
+  {
+    "id": "exceptions-finally-1",
+    "title": "Return in finally overrides result",
+    "difficulty": "Medium",
+    "category": "Exceptions",
+    "timeLimit": "04:00",
+    "symptom": "Method always returns false even when try block returns true.",
+    "code": "public boolean save() {\n    try {\n        return true;\n    } finally {\n        return false;\n    }\n}"
+  },
+  {
+    "id": "optionals-1",
+    "title": "Optional get without check",
+    "difficulty": "Easy",
+    "category": "Optionals",
+    "timeLimit": "02:00",
+    "symptom": "NoSuchElementException when the Optional is empty.",
+    "code": "Optional<User> user = findUser(id);\nreturn user.get().getName();"
+  },
+  {
+    "id": "optionals-2",
+    "title": "Optional.of used with nullable value",
+    "difficulty": "Easy",
+    "category": "Optionals",
+    "timeLimit": "02:00",
+    "symptom": "NullPointerException when email is null.",
+    "code": "return Optional.of(user.getEmail());"
+  },
+  {
+    "id": "optionals-3",
+    "title": "orElse eager computation surprise",
+    "difficulty": "Medium",
+    "category": "Optionals",
+    "timeLimit": "03:00",
+    "symptom": "Fallback method runs even when value is present.",
+    "code": "return findNickname(user).orElse(loadNicknameFromDatabase(user));"
+  },
+  {
+    "id": "dates-1",
+    "title": "Month value off by one",
+    "difficulty": "Medium",
+    "category": "Dates and Time",
+    "timeLimit": "03:00",
+    "symptom": "Expected January but date shows February.",
+    "code": "Calendar calendar = Calendar.getInstance();\ncalendar.set(2026, 1, 15);"
+  },
+  {
+    "id": "dates-2",
+    "title": "LocalDateTime used for time-zone specific moment",
+    "difficulty": "Medium",
+    "category": "Dates and Time",
+    "timeLimit": "04:00",
+    "symptom": "Meeting times shift incorrectly across regions.",
+    "code": "LocalDateTime meeting = LocalDateTime.now();\nsendToClient(meeting.toString());"
+  },
+  {
+    "id": "dates-3",
+    "title": "Using 24-hour format incorrectly",
+    "difficulty": "Easy",
+    "category": "Dates and Time",
+    "timeLimit": "02:00",
+    "symptom": "13:00 prints as 01:00 without AM/PM context.",
+    "code": "DateTimeFormatter formatter = DateTimeFormatter.ofPattern(\"hh:mm\");"
+  },
+  {
+    "id": "arrays-1",
+    "title": "Array index out of bounds",
+    "difficulty": "Easy",
+    "category": "Arrays",
+    "timeLimit": "02:00",
+    "symptom": "ArrayIndexOutOfBoundsException on the last iteration.",
+    "code": "for (int i = 0; i <= nums.length; i++) {\n    total += nums[i];\n}"
+  },
+  {
+    "id": "arrays-2",
+    "title": "Default values mistaken for real data",
+    "difficulty": "Easy",
+    "category": "Arrays",
+    "timeLimit": "02:00",
+    "symptom": "Sum includes unexpected zeros from an unfilled array.",
+    "code": "int[] scores = new int[5];\nreturn Arrays.stream(scores).sum();"
+  },
+  {
+    "id": "arrays-3",
+    "title": "Array copied by reference",
+    "difficulty": "Medium",
+    "category": "Arrays",
+    "timeLimit": "03:00",
+    "symptom": "Changing one array also changes the other.",
+    "code": "int[] original = {1, 2, 3};\nint[] copy = original;\ncopy[0] = 99;"
+  },
+  {
+    "id": "api-design-1",
+    "title": "Mutable internal state exposed",
+    "difficulty": "Medium",
+    "category": "API Design",
+    "timeLimit": "04:00",
+    "symptom": "Callers can change internal application state unexpectedly.",
+    "code": "public class ConfigStore {\n    private final Map<String, String> config = new HashMap<>();\n\n    public Map<String, String> getConfig() {\n        return config;\n    }\n}"
+  },
+  {
+    "id": "api-design-2",
+    "title": "Method returns null instead of empty list",
+    "difficulty": "Easy",
+    "category": "API Design",
+    "timeLimit": "02:00",
+    "symptom": "Consumers must add extra null checks and sometimes crash.",
+    "code": "public List<Order> getOrders() {\n    return null;\n}"
+  },
+  {
+    "id": "api-design-3",
+    "title": "Boolean parameter makes method confusing",
+    "difficulty": "Medium",
+    "category": "API Design",
+    "timeLimit": "03:00",
+    "symptom": "Call sites are hard to read and easy to misuse.",
+    "code": "public void sendEmail(User user, boolean urgent, boolean html, boolean trackOpens) {\n    // ...\n}"
+  },
+  {
+    "id": "recursion-1",
+    "title": "Recursive factorial never reaches base case",
+    "difficulty": "Medium",
+    "category": "Recursion",
+    "timeLimit": "04:00",
+    "symptom": "StackOverflowError when factorial is called with positive numbers.",
+    "code": "public static int factorial(int n) {\n    if (n == 0) {\n        return 0;\n    }\n    return n * factorial(n - 1);\n}"
+  },
+  {
+    "id": "recursion-2",
+    "title": "Recursive binary search misses valid target",
+    "difficulty": "Hard",
+    "category": "Recursion",
+    "timeLimit": "06:00",
+    "symptom": "Method returns -1 even when the target exists at the high index.",
+    "code": "public static int search(int[] nums, int left, int right, int target) {\n    if (left >= right) {\n        return -1;\n    }\n\n    int mid = (left + right) / 2;\n    if (nums[mid] == target) {\n        return mid;\n    }\n    if (nums[mid] < target) {\n        return search(nums, mid + 1, right, target);\n    }\n    return search(nums, left, mid - 1, target);\n}"
+  },
+  {
+    "id": "two-pointers-1",
+    "title": "Two-pointer loop can run forever",
+    "difficulty": "Medium",
+    "category": "Two Pointers",
+    "timeLimit": "04:00",
+    "symptom": "Loop never terminates for some sorted arrays.",
+    "code": "while (left < right) {\n    int sum = nums[left] + nums[right];\n    if (sum == target) {\n        return true;\n    }\n    if (sum < target) {\n        right--;\n    } else {\n        left++;\n    }\n}"
+  },
+  {
+    "id": "two-pointers-2",
+    "title": "Palindrome check compares wrong characters",
+    "difficulty": "Easy",
+    "category": "Two Pointers",
+    "timeLimit": "03:00",
+    "symptom": "Valid palindromes are rejected.",
+    "code": "while (left < right) {\n    if (text.charAt(left) != text.charAt(left)) {\n        return false;\n    }\n    left++;\n    right--;\n}\nreturn true;"
+  },
+  {
+    "id": "sliding-window-1",
+    "title": "Sliding window size grows without shrinking",
+    "difficulty": "Medium",
+    "category": "Sliding Window",
+    "timeLimit": "05:00",
+    "symptom": "Window-based max length is too large for repeated characters.",
+    "code": "for (int right = 0; right < s.length(); right++) {\n    char current = s.charAt(right);\n    while (seen.contains(current)) {\n        seen.remove(current);\n    }\n    seen.add(current);\n    max = Math.max(max, right - left + 1);\n}"
+  },
+  {
+    "id": "sliding-window-2",
+    "title": "Window sum never removes left value",
+    "difficulty": "Medium",
+    "category": "Sliding Window",
+    "timeLimit": "04:00",
+    "symptom": "Average of fixed-size window keeps increasing incorrectly.",
+    "code": "for (int right = 0; right < nums.length; right++) {\n    windowSum += nums[right];\n    if (right >= k - 1) {\n        max = Math.max(max, windowSum);\n        left++;\n    }\n}"
+  },
+  {
+    "id": "hashmap-1",
+    "title": "Two Sum stores value instead of index",
+    "difficulty": "Easy",
+    "category": "Hash Maps",
+    "timeLimit": "03:00",
+    "symptom": "Returns incorrect pair positions for valid input.",
+    "code": "Map<Integer, Integer> seen = new HashMap<>();\nfor (int i = 0; i < nums.length; i++) {\n    int need = target - nums[i];\n    if (seen.containsKey(need)) {\n        return new int[] { seen.get(need), i };\n    }\n    seen.put(nums[i], nums[i]);\n}\nreturn new int[0];"
+  },
+  {
+    "id": "hashmap-2",
+    "title": "ContainsKey checked against wrong variable",
+    "difficulty": "Easy",
+    "category": "Hash Maps",
+    "timeLimit": "03:00",
+    "symptom": "Duplicate detection always misses repeats.",
+    "code": "for (String email : emails) {\n    if (seen.containsKey(seen)) {\n        return true;\n    }\n    seen.put(email, true);\n}\nreturn false;"
+  },
+  {
+    "id": "hashmap-3",
+    "title": "Frequency map increments null count",
+    "difficulty": "Medium",
+    "category": "Hash Maps",
+    "timeLimit": "04:00",
+    "symptom": "NullPointerException on first occurrence of a key.",
+    "code": "for (String word : words) {\n    counts.put(word, counts.get(word) + 1);\n}"
+  },
+  {
+    "id": "binary-search-1",
+    "title": "Binary search midpoint overflow risk",
+    "difficulty": "Medium",
+    "category": "Binary Search",
+    "timeLimit": "04:00",
+    "symptom": "Fails for very large input ranges.",
+    "code": "int mid = (left + right) / 2;"
+  },
+  {
+    "id": "binary-search-2",
+    "title": "Binary search boundaries update incorrectly",
+    "difficulty": "Medium",
+    "category": "Binary Search",
+    "timeLimit": "04:00",
+    "symptom": "Search loops forever when target is absent.",
+    "code": "while (left <= right) {\n    int mid = left + (right - left) / 2;\n    if (nums[mid] == target) {\n        return mid;\n    }\n    if (nums[mid] < target) {\n        left = mid;\n    } else {\n        right = mid;\n    }\n}\nreturn -1;"
+  },
+  {
+    "id": "sorting-1",
+    "title": "Comparator subtraction can overflow",
+    "difficulty": "Medium",
+    "category": "Sorting",
+    "timeLimit": "04:00",
+    "symptom": "Sort order is wrong for very large integers.",
+    "code": "numbers.sort((a, b) -> a - b);"
+  },
+  {
+    "id": "sorting-2",
+    "title": "Comparator reverses intended order",
+    "difficulty": "Easy",
+    "category": "Sorting",
+    "timeLimit": "03:00",
+    "symptom": "List is sorted descending when ascending was expected.",
+    "code": "users.sort((a, b) -> b.getAge().compareTo(a.getAge()));"
+  },
+  {
+    "id": "linked-list-1",
+    "title": "Linked list traversal skips head node",
+    "difficulty": "Easy",
+    "category": "Linked Lists",
+    "timeLimit": "03:00",
+    "symptom": "Returned values are missing the first node.",
+    "code": "ListNode current = head.next;\nwhile (current != null) {\n    values.add(current.val);\n    current = current.next;\n}"
+  },
+  {
+    "id": "linked-list-2",
+    "title": "Fast pointer null check incomplete",
+    "difficulty": "Medium",
+    "category": "Linked Lists",
+    "timeLimit": "04:00",
+    "symptom": "NullPointerException when checking short lists for cycles.",
+    "code": "while (fast != null) {\n    slow = slow.next;\n    fast = fast.next.next;\n    if (slow == fast) {\n        return true;\n    }\n}\nreturn false;"
+  },
+  {
+    "id": "tree-1",
+    "title": "Tree DFS ignores right subtree",
+    "difficulty": "Easy",
+    "category": "Trees",
+    "timeLimit": "03:00",
+    "symptom": "Traversal result is missing all right-side nodes.",
+    "code": "public void dfs(TreeNode node) {\n    if (node == null) {\n        return;\n    }\n    values.add(node.val);\n    dfs(node.left);\n    dfs(node.left);\n}"
+  },
+  {
+    "id": "tree-2",
+    "title": "BST validation checks only direct children",
+    "difficulty": "Hard",
+    "category": "Trees",
+    "timeLimit": "06:00",
+    "symptom": "Invalid BSTs pass validation when deeper descendants break the rules.",
+    "code": "public boolean isValid(TreeNode node) {\n    if (node == null) {\n        return true;\n    }\n    if (node.left != null && node.left.val >= node.val) {\n        return false;\n    }\n    if (node.right != null && node.right.val <= node.val) {\n        return false;\n    }\n    return isValid(node.left) && isValid(node.right);\n}"
+  },
+  {
+    "id": "graph-1",
+    "title": "Visited set marked too late in BFS",
+    "difficulty": "Medium",
+    "category": "Graphs",
+    "timeLimit": "05:00",
+    "symptom": "Queue grows with duplicates and traversal repeats nodes.",
+    "code": "queue.offer(start);\nwhile (!queue.isEmpty()) {\n    Node current = queue.poll();\n    visited.add(current);\n    for (Node neighbor : current.neighbors) {\n        if (!visited.contains(neighbor)) {\n            queue.offer(neighbor);\n        }\n    }\n}"
+  },
+  {
+    "id": "graph-2",
+    "title": "DFS visited check missing before recursion",
+    "difficulty": "Medium",
+    "category": "Graphs",
+    "timeLimit": "05:00",
+    "symptom": "Cycle in graph causes infinite recursion.",
+    "code": "public void dfs(Node node) {\n    visited.add(node);\n    for (Node neighbor : node.neighbors) {\n        dfs(neighbor);\n    }\n}"
+  },
+  {
+    "id": "dynamic-programming-1",
+    "title": "DP array initialized with wrong base case",
+    "difficulty": "Medium",
+    "category": "Dynamic Programming",
+    "timeLimit": "05:00",
+    "symptom": "Climbing stairs returns 1 for n = 2 instead of 2.",
+    "code": "int[] dp = new int[n + 1];\ndp[0] = 1;\ndp[1] = 1;\nfor (int i = 2; i <= n; i++) {\n    dp[i] = dp[i - 1] + dp[i - 2];\n}\nreturn dp[n - 1];"
+  },
+  {
+    "id": "dynamic-programming-2",
+    "title": "Memoization result never stored",
+    "difficulty": "Hard",
+    "category": "Dynamic Programming",
+    "timeLimit": "06:00",
+    "symptom": "Recursive solution times out despite a memo map being present.",
+    "code": "public int fib(int n, Map<Integer, Integer> memo) {\n    if (n <= 1) {\n        return n;\n    }\n    if (memo.containsKey(n)) {\n        return memo.get(n);\n    }\n    return fib(n - 1, memo) + fib(n - 2, memo);\n}"
+  },
+  {
+    "id": "backtracking-1",
+    "title": "Backtracking forgets to undo choice",
+    "difficulty": "Hard",
+    "category": "Backtracking",
+    "timeLimit": "06:00",
+    "symptom": "Generated combinations contain extra values from previous paths.",
+    "code": "current.add(nums[i]);\nbacktrack(i + 1, current);\nresults.add(new ArrayList<>(current));"
+  },
+  {
+    "id": "stack-1",
+    "title": "Bracket matcher pops empty stack",
+    "difficulty": "Easy",
+    "category": "Stacks and Queues",
+    "timeLimit": "03:00",
+    "symptom": "EmptyStackException for input that starts with a closing bracket.",
+    "code": "for (char c : s.toCharArray()) {\n    if (c == ')') {\n        stack.pop();\n    } else {\n        stack.push(c);\n    }\n}"
+  },
+  {
+    "id": "queue-1",
+    "title": "Queue implemented with remove instead of poll",
+    "difficulty": "Easy",
+    "category": "Stacks and Queues",
+    "timeLimit": "03:00",
+    "symptom": "NoSuchElementException when queue is empty.",
+    "code": "String next = queue.remove();"
+  },
+  {
+    "id": "greedy-1",
+    "title": "Greedy interval logic compares wrong endpoint",
+    "difficulty": "Medium",
+    "category": "Greedy",
+    "timeLimit": "04:00",
+    "symptom": "Overlapping intervals are counted as non-overlapping.",
+    "code": "intervals.sort(Comparator.comparingInt(a -> a[1]));\nint end = intervals[0][1];\nint count = 1;\nfor (int i = 1; i < intervals.length; i++) {\n    if (intervals[i][1] >= end) {\n        count++;\n        end = intervals[i][1];\n    }\n}"
+  },
+  {
+    "id": "math-1",
+    "title": "Integer division loses precision",
+    "difficulty": "Easy",
+    "category": "Math",
+    "timeLimit": "03:00",
+    "symptom": "Average returns 2.0 instead of 2.5.",
+    "code": "double average = sum / count;"
+  },
+  {
+    "id": "math-2",
+    "title": "Modulo logic fails for negative numbers",
+    "difficulty": "Medium",
+    "category": "Math",
+    "timeLimit": "04:00",
+    "symptom": "Circular index becomes negative and crashes array access.",
+    "code": "int nextIndex = (currentIndex - 1) % items.length;"
+  },
+  {
+    "id": "oop-1",
+    "title": "equals overridden without hashCode",
+    "difficulty": "Medium",
+    "category": "OOP",
+    "timeLimit": "04:00",
+    "symptom": "HashSet contains duplicate logical objects.",
+    "code": "public class User {\n    private String email;\n\n    @Override\n    public boolean equals(Object obj) {\n        if (this == obj) return true;\n        if (!(obj instanceof User other)) return false;\n        return Objects.equals(email, other.email);\n    }\n}"
+  },
+  {
+    "id": "oop-2",
+    "title": "Subclass method never overrides parent",
+    "difficulty": "Easy",
+    "category": "OOP",
+    "timeLimit": "03:00",
+    "symptom": "Parent implementation runs unexpectedly.",
+    "code": "public class Animal {\n    public void speak() {\n        System.out.println(\"animal\");\n    }\n}\n\npublic class Dog extends Animal {\n    public void Speak() {\n        System.out.println(\"bark\");\n    }\n}"
+  },
+  {
+    "id": "sql-data-1",
+    "title": "ResultSet cursor never advanced",
+    "difficulty": "Easy",
+    "category": "SQL and Data",
+    "timeLimit": "03:00",
+    "symptom": "SQLException when reading query results.",
+    "code": "ResultSet rs = statement.executeQuery(query);\nString name = rs.getString(\"name\");"
+  },
+  {
+    "id": "sql-data-2",
+    "title": "Prepared statement parameters set in wrong order",
+    "difficulty": "Medium",
+    "category": "SQL and Data",
+    "timeLimit": "04:00",
+    "symptom": "Query returns no rows even for valid inputs.",
+    "code": "PreparedStatement ps = connection.prepareStatement(\"SELECT * FROM users WHERE email = ? AND status = ?\");\nps.setString(1, status);\nps.setString(2, email);"
+  }
+]
