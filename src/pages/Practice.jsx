@@ -31,6 +31,7 @@ export default function Practice() {
   const [hasStarted, setHasStarted] = useState(false);
   const [hasExpired, setHasExpired] = useState(false);
   const [showBugReveal, setShowBugReveal] = useState(false);
+  const [showExplanation, setShowExplanation] = useState(false);
 
   const filteredProblems = useMemo(() => {
     return problems.filter((problem) => {
@@ -65,6 +66,7 @@ export default function Practice() {
     setFixAttempt(activeProblem.code);
     setHasExpired(false);
     setShowBugReveal(false);
+    setShowExplanation(false);
     setSecondsLeft(parseTimeLimitToSeconds(activeProblem.timeLimit));
   }, [activeProblem]);
 
@@ -121,6 +123,7 @@ export default function Practice() {
     setHasStarted(false);
     setHasExpired(false);
     setShowBugReveal(false);
+    setShowExplanation(false);
     setSecondsLeft(0);
     setBugGuess('');
     setFixAttempt('');
@@ -128,6 +131,10 @@ export default function Practice() {
 
   const revealBug = () => {
     setShowBugReveal(true);
+  };
+
+  const toggleExplanation = () => {
+    setShowExplanation((current) => !current);
   };
 
   const timerPercentage = activeProblem
@@ -328,6 +335,23 @@ export default function Practice() {
                 <p className="mt-2 text-sm leading-6 text-slate-700">
                   {activeProblem.title}
                 </p>
+
+                <button
+                  type="button"
+                  onClick={toggleExplanation}
+                  className="mt-4 rounded-full border border-sky-300 bg-white px-4 py-2 text-sm font-semibold text-sky-800 transition hover:border-sky-500 hover:text-sky-900"
+                >
+                  {showExplanation ? 'Hide explanation' : 'Explain >'}
+                </button>
+
+                {showExplanation && (
+                  <div className="mt-4 rounded-2xl border border-sky-100 bg-white p-4">
+                    <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Explanation</div>
+                    <p className="mt-2 text-sm leading-6 text-slate-700">
+                      {activeProblem.explanation || 'No explanation available yet.'}
+                    </p>
+                  </div>
+                )}
               </div>
             )}
           </section>
