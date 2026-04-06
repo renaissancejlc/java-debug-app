@@ -229,4 +229,104 @@
     "code": "rs.getString();",
     "explanation": "Must call rs.next() first."
   }
+,  {
+    "id": "spring-autowired-1",
+    "title": "Autowired not working",
+    "difficulty": "Medium",
+    "category": "Spring",
+    "timeLimit": "04:00",
+    "symptom": "NullPointerException on service",
+    "code": "MyService service = new MyService();",
+    "explanation": "Spring beans must be injected, not manually instantiated."
+  },
+  {
+    "id": "spring-controller-1",
+    "title": "Missing annotation",
+    "difficulty": "Easy",
+    "category": "Spring",
+    "timeLimit": "03:00",
+    "symptom": "Endpoint not found",
+    "code": "public String getUser() { return \"ok\"; }",
+    "explanation": "Missing @RestController or @GetMapping annotation."
+  },
+  {
+    "id": "sql-injection-1",
+    "title": "SQL injection risk",
+    "difficulty": "Medium",
+    "category": "Security",
+    "timeLimit": "04:00",
+    "symptom": "Vulnerable query",
+    "code": "String q = \"SELECT * FROM users WHERE name = '\" + name + \"'\";",
+    "explanation": "Concatenating input into SQL leads to injection."
+  },
+  {
+    "id": "thread-sleep-1",
+    "title": "Sleep misuse",
+    "difficulty": "Easy",
+    "category": "Concurrency",
+    "timeLimit": "03:00",
+    "symptom": "Unexpected delay",
+    "code": "Thread.sleep(5);",
+    "explanation": "Sleep is in milliseconds, not seconds."
+  },
+  {
+    "id": "list-index-1",
+    "title": "Index misuse",
+    "difficulty": "Easy",
+    "category": "Collections",
+    "timeLimit": "02:00",
+    "symptom": "IndexOutOfBoundsException",
+    "code": "list.get(list.size());",
+    "explanation": "Last index is size() - 1."
+  },
+  {
+    "id": "double-equals-1",
+    "title": "Floating point comparison",
+    "difficulty": "Medium",
+    "category": "Math",
+    "timeLimit": "03:00",
+    "symptom": "Unexpected false",
+    "code": "if (a == b) return true;",
+    "explanation": "Floating point precision makes == unreliable."
+  },
+  {
+    "id": "recursion-stack-1",
+    "title": "Missing recursive progress",
+    "difficulty": "Medium",
+    "category": "Recursion",
+    "timeLimit": "04:00",
+    "symptom": "Stack overflow",
+    "code": "return recurse(n);",
+    "explanation": "Recursive call never changes input."
+  },
+  {
+    "id": "stream-null-1",
+    "title": "Null stream source",
+    "difficulty": "Medium",
+    "category": "Streams",
+    "timeLimit": "04:00",
+    "symptom": "NullPointerException",
+    "code": "list.stream().forEach(System.out::println);",
+    "explanation": "list may be null before streaming."
+  },
+  {
+    "id": "hashcode-1",
+    "title": "Mutable key in map",
+    "difficulty": "Hard",
+    "category": "Hash Maps",
+    "timeLimit": "05:00",
+    "symptom": "Key not found",
+    "code": "map.put(obj, value); obj.setField(5);",
+    "explanation": "Changing key after insertion breaks hashing."
+  },
+  {
+    "id": "api-timeout-1",
+    "title": "No timeout set",
+    "difficulty": "Medium",
+    "category": "Networking",
+    "timeLimit": "04:00",
+    "symptom": "Hanging request",
+    "code": "HttpURLConnection conn = (HttpURLConnection) url.openConnection();",
+    "explanation": "Timeouts must be configured to avoid hanging."
+  }
 ]
