@@ -718,5 +718,245 @@
     "symptom": "Error responses are treated like success.",
     "code": "InputStream in = conn.getInputStream();",
     "explanation": "HTTP clients should inspect the response status first. Reading only the input stream path can mis-handle non-2xx responses."
+  },
+  {
+    "id": "distributed-idempotency-1",
+    "title": "Non-idempotent retry creates duplicate charge",
+    "difficulty": "Hard",
+    "category": "Distributed Systems",
+    "timeLimit": "06:00",
+    "symptom": "Retrying a timed-out request sometimes charges the customer twice.",
+    "code": "public PaymentResult charge(PaymentRequest request) {\n    paymentGateway.charge(request.orderId(), request.amount());\n    orderRepository.markPaid(request.orderId());\n    return PaymentResult.success();\n}",
+    "explanation": "A retried request repeats the side effect because there is no idempotency key or deduplication check. Senior backend systems usually make payment-style operations idempotent."
+  },
+  {
+    "id": "distributed-outbox-1",
+    "title": "Database update and event publish can diverge",
+    "difficulty": "Hard",
+    "category": "Distributed Systems",
+    "timeLimit": "06:00",
+    "symptom": "Order row is committed but downstream service never receives the event.",
+    "code": "orderRepository.save(order);\nkafkaTemplate.send(\"orders.created\", order.getId());",
+    "explanation": "The database write and message publish are separate operations, so one can succeed while the other fails. This is the classic need for an outbox or similar consistency pattern."
+  },
+  {
+    "id": "distributed-exactly-once-1",
+    "title": "Consumer assumes message is processed only once",
+    "difficulty": "Hard",
+    "category": "Distributed Systems",
+    "timeLimit": "06:00",
+    "symptom": "Duplicate messages create duplicate records.",
+    "code": "public void handle(OrderCreated event) {\n    shipmentRepository.save(new Shipment(event.orderId()));\n}",
+    "explanation": "Message delivery is often at-least-once, not exactly-once. Consumers need deduplication or idempotent writes to tolerate redelivery safely."
+  },
+  {
+    "id": "transactions-isolation-1",
+    "title": "Read-modify-write loses concurrent updates",
+    "difficulty": "Hard",
+    "category": "Transactions",
+    "timeLimit": "06:00",
+    "symptom": "Inventory occasionally becomes incorrect under concurrent purchases.",
+    "code": "Inventory item = inventoryRepository.findById(id);\nitem.setCount(item.getCount() - quantity);\ninventoryRepository.save(item);",
+    "explanation": "Two concurrent transactions can read the same starting value and overwrite each other. Senior systems handle this with locking, version checks, or atomic SQL updates."
+  },
+  {
+    "id": "transactions-boundary-1",
+    "title": "Transaction boundary split across external call",
+    "difficulty": "Hard",
+    "category": "Transactions",
+    "timeLimit": "06:00",
+    "symptom": "Database commits even when external API call fails halfway through workflow.",
+    "code": "@Transactional\npublic void createSubscription(User user) {\n    subscriptionRepository.save(new Subscription(user.id()));\n    billingClient.createRemoteSubscription(user.id());\n}",
+    "explanation": "The database transaction cannot roll back the remote side effect. Once external systems are involved, compensation or saga-style thinking is needed."
+  },
+  {
+    "id": "transactions-nplus1-1",
+    "title": "ORM access pattern causes N+1 query explosion",
+    "difficulty": "Medium",
+    "category": "Databases",
+    "timeLimit": "05:00",
+    "symptom": "Endpoint is extremely slow when returning many parent records.",
+    "code": "List<Order> orders = orderRepository.findAll();\nfor (Order order : orders) {\n    order.getLineItems().size();\n}",
+    "explanation": "Lazy-loading related data inside a loop can trigger one additional query per row. This N+1 pattern is a very common senior backend performance issue."
+  },
+  {
+    "id": "cache-stale-1",
+    "title": "Cache never invalidated after update",
+    "difficulty": "Medium",
+    "category": "Caching",
+    "timeLimit": "05:00",
+    "symptom": "Users keep seeing old profile data after a successful edit.",
+    "code": "public User updateUser(User user) {\n    User saved = repository.save(user);\n    return saved;\n}",
+    "explanation": "The write path updates the database but does nothing about any cached copy. Read performance features often require explicit invalidation or refresh logic."
+  },
+  {
+    "id": "cache-stampede-1",
+    "title": "Cache miss stampede on hot key",
+    "difficulty": "Hard",
+    "category": "Caching",
+    "timeLimit": "06:00",
+    "symptom": "Traffic spike causes many identical expensive recomputations.",
+    "code": "Value cached = cache.get(key);\nif (cached == null) {\n    Value value = expensiveLoader.load(key);\n    cache.put(key, value);\n    return value;\n}\nreturn cached;",
+    "explanation": "When many requests miss the same key simultaneously, they all recompute the value. Senior cache designs often use request coalescing, locking, or stale-while-revalidate strategies."
+  },
+  {
+    "id": "api-versioning-1",
+    "title": "Breaking response shape change without versioning",
+    "difficulty": "Medium",
+    "category": "API Design",
+    "timeLimit": "05:00",
+    "symptom": "Existing clients fail after a deployment even though endpoint path stayed the same.",
+    "code": "return Map.of(\"firstName\", user.firstName(), \"lastName\", user.lastName());",
+    "explanation": "Changing a response contract in place can break consumers. Senior API design usually treats response shape as a compatibility commitment and versions breaking changes."
+  },
+  {
+    "id": "api-idempotency-1",
+    "title": "POST endpoint repeats side effects on client retry",
+    "difficulty": "Hard",
+    "category": "API Design",
+    "timeLimit": "06:00",
+    "symptom": "Network retry creates duplicate resource or duplicate payment.",
+    "code": "@PostMapping(\"/orders\")\npublic Order create(@RequestBody CreateOrderRequest request) {\n    return orderService.create(request);\n}",
+    "explanation": "Retried create operations can safely happen only when the endpoint or service layer supports deduplication or idempotency semantics."
+  },
+  {
+    "id": "observability-logging-1",
+    "title": "Logs omit request correlation id",
+    "difficulty": "Medium",
+    "category": "Observability",
+    "timeLimit": "05:00",
+    "symptom": "Production incident is hard to trace across services.",
+    "code": "log.info(\"creating order {}\", orderId);",
+    "explanation": "Without a correlation or trace id, logs from a single request cannot easily be stitched together across service boundaries."
+  },
+  {
+    "id": "observability-swallow-1",
+    "title": "Error metric never emitted on failure path",
+    "difficulty": "Medium",
+    "category": "Observability",
+    "timeLimit": "05:00",
+    "symptom": "Dashboards look healthy even while requests are failing.",
+    "code": "try {\n    process();\n} catch (Exception e) {\n    log.error(\"processing failed\", e);\n    throw e;\n}",
+    "explanation": "Logging alone may not update dashboards or alerts. Senior systems often emit explicit metrics for failure rate, latency, and saturation signals."
+  },
+  {
+    "id": "threadpool-blocking-1",
+    "title": "CPU pool blocked by slow I/O",
+    "difficulty": "Hard",
+    "category": "Concurrency",
+    "timeLimit": "06:00",
+    "symptom": "Service throughput collapses during slow downstream calls.",
+    "code": "ExecutorService pool = Executors.newFixedThreadPool(8);\nfor (Task task : tasks) {\n    pool.submit(() -> remoteClient.call(task));\n}",
+    "explanation": "Using a small fixed pool for blocking I/O can starve the system. Senior designs separate blocking workloads or use different concurrency models for them."
+  },
+  {
+    "id": "threadpool-unbounded-queue-1",
+    "title": "Executor queue grows without backpressure",
+    "difficulty": "Hard",
+    "category": "Concurrency",
+    "timeLimit": "06:00",
+    "symptom": "Memory usage grows steadily during overload.",
+    "code": "ExecutorService executor = Executors.newFixedThreadPool(16);",
+    "explanation": "Many convenience executors use unbounded queues. Under load, tasks pile up in memory instead of being rejected or slowed, which can cause OOM conditions."
+  },
+  {
+    "id": "memory-leak-listener-1",
+    "title": "Listener registration never cleaned up",
+    "difficulty": "Hard",
+    "category": "Memory",
+    "timeLimit": "06:00",
+    "symptom": "Heap grows after repeated connect-disconnect cycles.",
+    "code": "eventBus.register(listener);",
+    "explanation": "Objects held by global listeners remain strongly reachable unless unregistered. Long-lived listener registries are a classic source of memory leaks."
+  },
+  {
+    "id": "memory-cache-1",
+    "title": "In-memory cache grows forever",
+    "difficulty": "Medium",
+    "category": "Memory",
+    "timeLimit": "05:00",
+    "symptom": "Service memory climbs over days of uptime.",
+    "code": "private final Map<String, Result> cache = new ConcurrentHashMap<>();",
+    "explanation": "A cache without size limits or eviction policy is really just an ever-growing map. Senior systems bound caches intentionally."
+  },
+  {
+    "id": "serialization-jackson-1",
+    "title": "JSON deserialization fails without default constructor or creator",
+    "difficulty": "Medium",
+    "category": "Serialization",
+    "timeLimit": "05:00",
+    "symptom": "HTTP request body cannot be deserialized into domain object.",
+    "code": "public class UserDto {\n    private final String name;\n    public UserDto(String name) { this.name = name; }\n}",
+    "explanation": "Many serializers need a default constructor, explicit creator annotations, or matching configuration for immutable objects."
+  },
+  {
+    "id": "serialization-recursion-1",
+    "title": "Bidirectional relationship causes infinite JSON recursion",
+    "difficulty": "Hard",
+    "category": "Serialization",
+    "timeLimit": "06:00",
+    "symptom": "Serializing entity graph blows up or loops forever.",
+    "code": "class Order { Customer customer; }\nclass Customer { List<Order> orders; }",
+    "explanation": "Bidirectional references can cause serializers to walk the same graph indefinitely unless one side is ignored, flattened, or managed explicitly."
+  },
+  {
+    "id": "messaging-ordering-1",
+    "title": "Consumer assumes global message ordering",
+    "difficulty": "Hard",
+    "category": "Messaging",
+    "timeLimit": "06:00",
+    "symptom": "Update event is processed before create event for the same entity.",
+    "code": "public void handle(Event event) {\n    stateMachine.apply(event);\n}",
+    "explanation": "Many messaging systems provide ordering only within a partition or key scope, not globally. Consumers must be designed with real ordering guarantees in mind."
+  },
+  {
+    "id": "messaging-poison-1",
+    "title": "Poison message blocks queue forever",
+    "difficulty": "Hard",
+    "category": "Messaging",
+    "timeLimit": "06:00",
+    "symptom": "Same failing message is retried endlessly and prevents progress.",
+    "code": "public void onMessage(String payload) {\n    process(payload);\n}",
+    "explanation": "Without dead-letter handling, retry policy, or quarantine logic, a single bad message can stall a pipeline indefinitely."
+  },
+  {
+    "id": "security-secrets-1",
+    "title": "Secret hardcoded in source",
+    "difficulty": "Easy",
+    "category": "Security",
+    "timeLimit": "03:00",
+    "symptom": "Credential appears in repository or build artifact.",
+    "code": "private static final String API_KEY = \"prod-secret-key\";",
+    "explanation": "Secrets should come from secure runtime configuration or a secret manager, not be embedded in source code."
+  },
+  {
+    "id": "security-logging-1",
+    "title": "Sensitive data written to logs",
+    "difficulty": "Medium",
+    "category": "Security",
+    "timeLimit": "04:00",
+    "symptom": "PII or credentials are visible in application logs.",
+    "code": "log.info(\"login request user={} password={}\", username, password);",
+    "explanation": "Logs are often widely accessible and retained for long periods. Sensitive values should be redacted or omitted entirely."
+  },
+  {
+    "id": "resilience-circuitbreaker-1",
+    "title": "Repeated downstream failures cascade into full outage",
+    "difficulty": "Hard",
+    "category": "Resilience",
+    "timeLimit": "06:00",
+    "symptom": "One unhealthy dependency drags the whole service down.",
+    "code": "for (Order order : orders) {\n    shippingClient.quote(order);\n}",
+    "explanation": "Without timeouts, fallback, or circuit breaking, repeated calls to a failing dependency can exhaust threads and amplify outages."
+  },
+  {
+    "id": "resilience-bulkhead-1",
+    "title": "One noisy integration starves unrelated traffic",
+    "difficulty": "Hard",
+    "category": "Resilience",
+    "timeLimit": "06:00",
+    "symptom": "Slow partner API causes unrelated endpoints to become slow too.",
+    "code": "ExecutorService sharedPool = Executors.newFixedThreadPool(20);",
+    "explanation": "Using the same resource pool for unrelated workloads means one noisy dependency can consume shared capacity. Bulkheads isolate blast radius."
   }
 ]
